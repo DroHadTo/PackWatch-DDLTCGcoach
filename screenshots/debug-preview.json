@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Pack Watch",
+      "hasCanvas": false,
+      "bodyTextLen": 418,
+      "bodyTextHash": "ffb8572cf12690097cb4f97650d6601929f3c019ac1c23cb9ea23a3a80a6afa5",
+      "bodyTextPrefix": "DDLTCG COACH Pack Watch How to use this Pack Watch is a coach. I",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/debug-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Pack Watch",
+      "hasCanvas": false,
+      "bodyTextLen": 418,
+      "bodyTextHash": "ffb8572cf12690097cb4f97650d6601929f3c019ac1c23cb9ea23a3a80a6afa5",
+      "bodyTextPrefix": "DDLTCG COACH Pack Watch How to use this Pack Watch is a coach. I",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/debug-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/debug-preview.json"
+}

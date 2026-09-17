@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Pack Watch</title>
+    <style>
+      html, body { margin: 0; background: transparent; font: 14px/1.45 "Segoe UI", system-ui, sans-serif; color: #ece8e1; }
+      main { display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+      section { background: rgba(12,11,10,0.88); border: 1px solid #2a2622; border-radius: 12px; padding: 12px; }
+      h2 { margin: 0 0 6px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #9a948a; }
+      .now { font-family: Georgia, serif; font-size: 20px; line-height: 1.25; }
+      .muted { color: #9a948a; }
+      .bad { color: #c45c4a; }
+      .ok { color: #7ea37a; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h2>Advice</h2>
+        <p class="now" id="now">Waiting for brain.py</p>
+        <p class="muted" id="why"></p>
+      </section>
+      <section>
+        <h2>Deck tracker</h2>
+        <p id="deck" class="muted">Live text length will show here.</p>
+      </section>
+      <section>
+        <h2>Opponent</h2>
+        <p id="opp">Unknown until Taunt or HP is read.</p>
+      </section>
+      <section>
+        <h2>Lessons</h2>
+        <p id="lessons" class="bad"></p>
+      </section>
+      <section>
+        <h2>Stats</h2>
+        <p id="stats" class="muted">Ctrl+Shift+F toggles click-through so you can drag this window.</p>
+      </section>
+    </main>
+    <script src="logic.js"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "now": "Spend the mana. Develop, then only legal fights.",
+  "why": "Win the Hero race. Card text overrides memory.",
+  "dont": [
+    "Do not swing into Taunt.",
+    "Spend the mana \u2014 it does not bank.",
+    "Do not spring a trap the turn you set it.",
+    "Empty lanes stay empty. Place on purpose.",
+    "Only take kill-gate fights (or Poison / a stack)."
+  ],
+  "legal": [
+    "Advice only. You click."
+  ],
+  "turn": "unknown",
+  "taunt": false,
+  "raw": ""
+}
