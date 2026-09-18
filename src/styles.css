@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0c0b0a;
-  --color-surface: #161412;
-  --color-elevated: #1e1b18;
-  --color-fg: #ece8e1;
-  --color-muted: #9a948a;
-  --color-faint: #6f6a63;
-  --color-border: #2a2622;
-  --color-accent: #b4d44a;
-  --color-accent-fg: #10140a;
-  --color-danger: #c45c4a;
-  --color-ok: #7ea37a;
-  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
-  --font-sans: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --color-bg: #120c08;
+  --color-surface: #1d120b;
+  --color-elevated: #2a1a0e;
+  --color-fg: #f8e4b1;
+  --color-muted: #c4a77a;
+  --color-faint: #806747;
+  --color-border: #5a3b1c;
+  /* DDLTCG arena: near-black bark, toasted leather, parchment, and pack-gold. */
+  --color-accent: #e6a52f;
+  --color-accent-fg: #251304;
+  --color-danger: #d06a3e;
+  --color-ok: #d9c267;
+  --font-display: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
   --radius-sm: 8px;
   --radius-md: 12px;
