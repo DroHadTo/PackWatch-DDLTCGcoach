@@ -2,15 +2,21 @@
 
 import { CARDS, RULES_TEXT, defOf } from "@/lib/ddl/cards";
 import { BoardCall } from "@/components/pack/board-call";
+import { KnowledgePage } from "@/components/pack/knowledge";
+import { LandingPage } from "@/components/pack/landing";
+import { PackwatchLiveBridge } from "@/components/pack/live-bridge";
 import { CoachPanels } from "@/components/pack/panels";
+import { ProgressPage } from "@/components/pack/progress";
 import { ScreenWatch, openCompanion } from "@/components/pack/screen-watch";
 import { answerQuestion, answerWatch } from "@/lib/ddl/coach";
 import { DECK_CLASSES, groupDeck } from "@/lib/ddl/deck";
 import { canAttackCreature, effectiveAtk, effectiveKeywords } from "@/lib/ddl/engine";
+import { GUEST_KEY, NAV_ITEMS } from "@/lib/packwatch-config";
+import { usePackwatchBridge } from "@/hooks/use-packwatch-bridge";
 import { useBrain } from "@/lib/ddl/store";
 import type { CardInst, PlayerState } from "@/lib/ddl/types";
 import { RotateCcw } from "lucide-react";
-import { Component, type ReactNode, useMemo, useState } from "react";
+import { Component, type ReactNode, useEffect, useMemo, useState } from "react";
 
 function hpTone(hp: number) {
   if (hp <= 10) return "text-danger";
@@ -154,6 +160,12 @@ function PackAppInner() {
   const { game, selected } = b;
   const [q, setQ] = useState("");
   const [popupBlock, setPopupBlock] = useState("");
+  const [guest, setGuest] = useState(false);
+  const bridge = usePackwatchBridge();
+
+  useEffect(() => {
+    setGuest(window.sessionStorage.getItem(GUEST_KEY) === "true");
+  }, []);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -207,36 +219,42 @@ function PackAppInner() {
     if (selected?.kind === "lane") b.hit(Number(selected.id), "hero");
   }
 
+  if (!guest) {
+    return (
+      <div className="min-h-dvh bg-bg text-fg">
+        <LandingPage
+          onGuest={() => {
+            window.sessionStorage.setItem(GUEST_KEY, "true");
+            setGuest(true);
+            b.setTab("watch");
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-dvh bg-bg text-fg">
       <header className="border-b border-border px-4 py-3 md:px-8">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-          <button type="button" onClick={() => b.setTab("home")} className="text-left">
-            <p className="font-mono text-[10px] tracking-[0.22em] text-muted">DDLTCG COACH</p>
-            <h1 className="font-display text-2xl tracking-tight">Pack Watch</h1>
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <button type="button" onClick={() => b.setTab("watch")} className="text-left">
+            <p className="font-mono text-[10px] tracking-[0.22em] text-muted">DDL COACH / ADVICE ONLY</p>
+            <h1 className="font-display text-2xl tracking-tight">Packwatch</h1>
           </button>
-          {b.tab !== "home" && (
-            <nav className="flex gap-1 rounded-lg border border-border bg-surface p-1">
-              {(
-                [
-                  ["arena", "Play"],
-                  ["watch", "Watch"],
-                  ["brain", "Cards"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => b.setTab(id)}
-                  className={`min-h-11 rounded-md px-3 text-sm ${
-                    b.tab === id ? "bg-accent text-accent-fg" : "text-muted hover:text-fg"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </nav>
-          )}
+          <nav className="flex gap-1 overflow-x-auto rounded-lg border border-border bg-surface p-1">
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => b.setTab(item.id)}
+                className={`min-h-11 shrink-0 rounded-md px-3 text-sm ${
+                  b.tab === item.id ? "bg-accent text-accent-fg" : "text-muted hover:text-fg"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
         </div>
       </header>
 
@@ -397,6 +415,20 @@ function PackAppInner() {
 
               {b.tab === "watch" && (
                 <div className="flex flex-col gap-4">
+                  <PackwatchLiveBridge bridge={bridge} />
+                  {bridge.advice && (
+                    <div className="rounded-xl border border-border bg-surface p-5">
+                      <p className="font-mono text-[10px] tracking-wide text-muted">live advice</p>
+                      <p className="mt-2 text-sm"><span className="text-muted">Observed. </span>{bridge.advice.observed}</p>
+                      <p className="mt-1 font-display text-xl leading-snug">{bridge.advice.recommendation}</p>
+                      {bridge.advice.confidence && (
+                        <p className="mt-2 text-sm text-muted">Confidence. {bridge.advice.confidence}</p>
+                      )}
+                    </div>
+                  )}
+                  {bridge.board && (
+                    <pre className="overflow-auto rounded-xl border border-border bg-surface p-4 font-mono text-xs leading-relaxed text-muted">{bridge.board}</pre>
+                  )}
                   <div className="rounded-xl border border-border bg-surface p-5">
                     <h2 className="font-display text-2xl">Call the live board</h2>
                     <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted">
@@ -424,6 +456,11 @@ function PackAppInner() {
                       </li>
                       <li>
                         <code className="text-xs">python python/brain.py --loop</code>
+                      </li>
+                      <li>
+                        <code className="text-xs">python python/bridge.py</code>
+                        {" "}
+                        then Connect watcher
                       </li>
                       <li>
                         <code className="text-xs">cd overlay && npm start</code>
@@ -532,6 +569,9 @@ function PackAppInner() {
                   </ul>
                 </div>
               )}
+
+              {b.tab === "progress" && <ProgressPage />}
+              {b.tab === "knowledge" && <KnowledgePage />}
             </section>
 
             <aside className="flex flex-col gap-3">

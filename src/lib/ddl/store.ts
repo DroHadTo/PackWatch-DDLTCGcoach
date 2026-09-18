@@ -23,7 +23,7 @@ interface Brain {
   lastScan: string;
   lastDeck: BuiltDeck | null;
   lessons: Lesson[];
-  tab: "home" | "watch" | "arena" | "brain";
+  tab: "home" | "watch" | "arena" | "brain" | "progress" | "knowledge";
   coachLine: CoachLine;
   ask: string;
   askReply: string;
@@ -61,7 +61,7 @@ export const useBrain = create<Brain>()(
         lastScan: "Learning from every match, scan, and overlay. Wayne is banned online.",
         lastDeck: null,
         lessons: [],
-        tab: "home",
+        tab: "watch",
         coachLine: bump(game, []),
         ask: "",
         askReply: "",

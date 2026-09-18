@@ -44,8 +44,10 @@ pip install -r requirements.txt
 python -m playwright install chromium
 
 python python/watcher.py --mode attach
-python python/brain.py --loop
+python python/bridge.py
 ```
+
+Then in Packwatch tap **Connect watcher**. The hosted app polls `http://127.0.0.1:8765/live` and `/advice`. CORS is open. The process never clicks.
 
 `watcher.py` writes `data/live.json` every 1.5s. `brain.py` writes `data/advice.json`.
 
