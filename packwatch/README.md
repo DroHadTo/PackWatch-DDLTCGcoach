@@ -50,6 +50,9 @@ python python/bridge.py
 Then in Packwatch tap **Connect watcher**. The hosted app polls `http://127.0.0.1:8765/live` and `/advice`. CORS is open. The process never clicks.
 
 `watcher.py` writes `data/live.json` every 1.5s. `brain.py` writes `data/advice.json`.
+The watcher also exposes the read-only browser-neutral bridge at
+`http://127.0.0.1:8765/live` and `/advice` with CORS enabled. Packwatch polls
+both endpoints every 1.5 seconds. The bridge never sends actions to the game.
 
 Screen fallback (no CDP):
 

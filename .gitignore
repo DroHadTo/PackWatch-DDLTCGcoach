@@ -1,5 +1,9 @@
 node_modules/
+.venv/
+__pycache__/
+**/__pycache__/
 .project_id
 .github_repo
 .env
 .env.*
+packwatch/data/*.json

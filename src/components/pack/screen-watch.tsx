@@ -4,6 +4,7 @@ import { learnFrame } from "@/lib/ddl/learn-frame";
 import { parseSight, type Sight } from "@/lib/ddl/parse-sight";
 import { useBrain } from "@/lib/ddl/store";
 import { useEffect, useRef, useState } from "react";
+import { LiveBridge } from "./live-bridge";
 
 type Detector = { detect: (src: ImageBitmap) => Promise<{ rawValue: string }[]> };
 
@@ -157,6 +158,7 @@ export function ScreenWatch({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className="flex flex-col gap-3">
+      <LiveBridge />
       {!stream && (
         <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted">
           <li>
