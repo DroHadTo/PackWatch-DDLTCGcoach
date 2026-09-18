@@ -88,6 +88,60 @@ export function followSkill(g: GameState, lessons: Lesson[]): CoachLine {
   return { now, why, dont: dont.slice(0, 5), legal: legal.slice(0, 6) };
 }
 
+export function coachFromCall(
+  call: {
+    turn: "you" | "opp";
+    youHP: number;
+    oppHP: number;
+    mana: number;
+    taunt: boolean;
+    rushEntered: boolean;
+    trapThisTurn: boolean;
+    cards: string[];
+  },
+  lessons: Lesson[] = [],
+): CoachLine {
+  const dont = [...FIVE];
+  const legal: string[] = [];
+  if (call.taunt) dont.unshift("Do not swing face or a non-Taunt.");
+  if (call.rushEntered) dont.unshift("Rush bodies this turn — never the Hero.");
+  if (call.trapThisTurn) dont.unshift("The trap you just set cannot spring this turn.");
+  if (call.mana > 0) legal.push(`You still have ${call.mana} mana — it does not bank.`);
+  if (call.cards.length) legal.push(`Seen: ${call.cards.slice(0, 8).join(", ")}.`);
+
+  if (call.turn === "opp") {
+    return {
+      now: "Their turn. Plan the crack. Do not click.",
+      why: "Wait for YOUR TURN.",
+      dont: dont.slice(0, 5),
+      legal,
+    };
+  }
+
+  let now = "Spend the mana. Develop, then only legal fights.";
+  if (call.taunt) now = "Crack Taunt first. You cannot win through a wall.";
+  else if (call.oppHP <= 10 && !call.taunt) now = "Face is open and they are low. Close it if a ready body can finish.";
+  else if (call.rushEntered) now = "Rush hits creatures this turn. Do not send it at the Hero.";
+  else if (call.trapThisTurn) now = "Trap is set. Play the rest of the mana — do not try to spring it.";
+  else if (call.mana <= 0) now = "Mana is gone. Only attack if the fight kills, then End turn.";
+
+  const hits = lessons.filter((l) => {
+    if (l.kind === "taunt" && call.taunt) return true;
+    if (l.kind === "rush" && call.rushEntered) return true;
+    if (l.kind === "trap" && call.trapThisTurn) return true;
+    if (l.kind === "mana" && call.mana > 0) return true;
+    return false;
+  });
+  if (hits[0]) now = `${hits[0].title} — ${now}`;
+
+  return {
+    now,
+    why: `You ${call.youHP}/40 · they ${call.oppHP}/40. Win the Hero race.`,
+    dont: dont.slice(0, 5),
+    legal: legal.slice(0, 6),
+  };
+}
+
 export function lessonFromIllegal(detail: string): Lesson | null {
   const d = detail.toLowerCase();
   const kind: MistakeKind = /taunt/.test(d)

@@ -245,8 +245,8 @@ function PackAppInner() {
           <section className="mx-auto max-w-xl py-8">
             <h2 className="font-display text-3xl tracking-tight">How to use this</h2>
             <p className="mt-3 text-base leading-relaxed text-muted">
-              Pack Watch is an advice-only companion, never a Chrome extension. It stays outside the game: practice
-              here, or call the live board by typing what you see.
+              Live coach for DDL. You play. Pack Watch never sits inside the game, never clicks, never stores a
+              login. Wayne stays banned. Practice here, or call the live board each turn.
             </p>
             <div className="mt-8 grid gap-3">
               <button
