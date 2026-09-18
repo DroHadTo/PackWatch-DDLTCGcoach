@@ -5,6 +5,15 @@ Grok Build, in an isolated Linux sandbox; read it fully before writing code.
 Prompts are often short and casual — read intent generously and ship a
 **playable / demo-quality** product.
 
+## Packwatch repository source of truth
+
+This workspace is the canonical, merged Packwatch version for ongoing
+development. Build every future change on the current `main` branch and
+publish updates to `https://github.com/DroHadTo/packwatch` on `main`. Do not
+recreate, restore, or continue development from the older exported version.
+The older commits remain only as Git history; the merged `main` tip is the
+active version.
+
 **Depth lives in `.grok/references/*.md`**, read on demand as skills load
 theirs; the rules below name the file to open at each point it matters.
 
