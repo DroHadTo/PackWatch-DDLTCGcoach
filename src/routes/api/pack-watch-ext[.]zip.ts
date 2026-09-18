@@ -6,7 +6,7 @@ function zipBytes() {
   return new Uint8Array(bin);
 }
 
-export const Route = createFileRoute("/api/pack-watch-ext.zip" as never)({
+export const Route = createFileRoute("/api/pack-watch-ext.zip")({
   server: {
     handlers: {
       GET: async () => {

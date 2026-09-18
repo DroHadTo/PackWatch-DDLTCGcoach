@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DeskRouteImport } from './routes/desk'
+import { Route as ApiPackWatchExtDotzipRouteImport } from './routes/api/pack-watch-ext[.]zip'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +23,40 @@ const DeskRoute = DeskRouteImport.update({
   path: '/desk',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPackWatchExtDotzipRoute = ApiPackWatchExtDotzipRouteImport.update({
+  id: '/api/pack-watch-ext.zip',
+  path: '/api/pack-watch-ext.zip',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/desk'
+  fullPaths: '/' | '/desk' | '/api/pack-watch-ext.zip'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/desk'
-  id: '__root__' | '/' | '/desk'
+  to: '/' | '/desk' | '/api/pack-watch-ext.zip'
+  id: '__root__' | '/' | '/desk' | '/api/pack-watch-ext.zip'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DeskRoute: typeof DeskRoute
+  ApiPackWatchExtDotzipRoute: typeof ApiPackWatchExtDotzipRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +75,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeskRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/pack-watch-ext.zip': {
+      id: '/api/pack-watch-ext.zip'
+      path: '/api/pack-watch-ext.zip'
+      fullPath: '/api/pack-watch-ext.zip'
+      preLoaderRoute: typeof ApiPackWatchExtDotzipRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DeskRoute: DeskRoute,
+  ApiPackWatchExtDotzipRoute: ApiPackWatchExtDotzipRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
