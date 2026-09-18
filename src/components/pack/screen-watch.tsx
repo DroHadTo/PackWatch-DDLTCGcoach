@@ -4,7 +4,8 @@ import { learnFrame } from "@/lib/ddl/learn-frame";
 import { parseSight, type Sight } from "@/lib/ddl/parse-sight";
 import { useBrain } from "@/lib/ddl/store";
 import { useEffect, useRef, useState } from "react";
-import { LiveBridge } from "./live-bridge";
+import { PackwatchLiveBridge } from "./live-bridge";
+import { usePackwatchBridge } from "@/hooks/use-packwatch-bridge";
 
 type Detector = { detect: (src: ImageBitmap) => Promise<{ rawValue: string }[]> };
 
@@ -23,6 +24,7 @@ function shareOptions(): DisplayMediaStreamOptions {
 
 export function ScreenWatch({ compact = false }: { compact?: boolean }) {
   const b = useBrain();
+  const bridge = usePackwatchBridge();
   const videoRef = useRef<HTMLVideoElement>(null);
   const detectorRef = useRef<Detector | null>(null);
   const scanInFlightRef = useRef(false);
@@ -158,7 +160,7 @@ export function ScreenWatch({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <LiveBridge />
+      <PackwatchLiveBridge bridge={bridge} />
       {!stream && (
         <ol className="list-decimal space-y-2 pl-5 text-sm leading-relaxed text-muted">
           <li>
