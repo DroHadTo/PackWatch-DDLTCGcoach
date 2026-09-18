@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Pack Watch",
+      "hasCanvas": false,
+      "bodyTextLen": 25,
+      "bodyTextHash": "bf864e52da75d0cfd9452846afeabc02f0ebd87f36d36ead68762a2ed13bf6dd",
+      "bodyTextPrefix": "Pack Watch Getting ready…",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Pack Watch",
+      "hasCanvas": false,
+      "bodyTextLen": 25,
+      "bodyTextHash": "bf864e52da75d0cfd9452846afeabc02f0ebd87f36d36ead68762a2ed13bf6dd",
+      "bodyTextPrefix": "Pack Watch Getting ready…",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

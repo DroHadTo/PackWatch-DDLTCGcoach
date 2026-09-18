@@ -1,0 +1,28 @@
+import type { ControlRecord } from "./types";
+
+export const SEED_CONTROLS: ControlRecord[] = [
+  { id: "hot-pack", label: "Hot Pack", where: "Lobby chrome", function: "Opens pack / promo surface.", seen: 1, lastSeen: 0 },
+  { id: "log", label: "Log", where: "Lobby chrome", function: "Match / system log.", seen: 1, lastSeen: 0 },
+  { id: "new-game", label: "New Game", where: "Match HUD", function: "Start a fresh match.", seen: 1, lastSeen: 0 },
+  { id: "end-turn", label: "End Turn", where: "Match HUD", function: "Pass after main. Runs End step, then opponent Gain/Draw/Start.", seen: 1, lastSeen: 0 },
+  { id: "resume", label: "Resume", where: "Unfinished match", function: "Reconnect a live bot game on the server.", seen: 1, lastSeen: 0 },
+  { id: "cancel", label: "Cancel", where: "Chooser", function: "Abort a card choice.", seen: 1, lastSeen: 0 },
+  { id: "confirm", label: "Confirm", where: "Chooser", function: "Lock the chosen card.", seen: 1, lastSeen: 0 },
+  { id: "play-again", label: "Play Again", where: "Post-match", function: "Queue another game with the same decks.", seen: 1, lastSeen: 0 },
+  { id: "change-decks", label: "Change decks", where: "Post-match", function: "Return to deck select.", seen: 1, lastSeen: 0 },
+  { id: "sign-in", label: "Sign in", where: "Lobby", function: "Hero account — Miles, streaks, badges persist.", seen: 1, lastSeen: 0 },
+  { id: "create-account", label: "Create account", where: "Lobby", function: "Free Hero Account.", seen: 1, lastSeen: 0 },
+  { id: "pvp", label: "Vs Pack", where: "Path picker", function: "PvP queue.", seen: 1, lastSeen: 0 },
+  { id: "bot", label: "Vs Bot", where: "Path picker", function: "Practice vs the server bot.", seen: 1, lastSeen: 0 },
+  { id: "boost", label: "Boost", where: "Path picker", function: "Boost mode.", seen: 1, lastSeen: 0 },
+  { id: "teach", label: "Tutorial", where: "Path picker", function: "Guided teach mode.", seen: 1, lastSeen: 0 },
+  { id: "how", label: "How to Play", where: "Lobby", function: "Rules primer.", seen: 1, lastSeen: 0 },
+  { id: "leaderboard", label: "Leaderboard", where: "Lobby", function: "Arena ranking.", seen: 1, lastSeen: 0 },
+  { id: "settings", label: "Settings", where: "HUD gear", function: "Volume, preferences.", seen: 1, lastSeen: 0 },
+  { id: "sound", label: "Sound", where: "HUD", function: "Mute / unmute.", seen: 1, lastSeen: 0 },
+  { id: "grave", label: "Graveyard", where: "Board", function: "Open face-up grave pile.", seen: 1, lastSeen: 0 },
+  { id: "l1", label: "L1–L5", where: "Board", function: "Creature lanes. One body each. Empty stays empty.", seen: 1, lastSeen: 0 },
+  { id: "s1", label: "S1–S5", where: "Board", function: "Spell / trap back row.", seen: 1, lastSeen: 0 },
+  { id: "hand", label: "Your hand", where: "Board", function: "Playable cards. Cap 10.", seen: 1, lastSeen: 0 },
+  { id: "end-btn", label: "YOUR TURN", where: "Banner", function: "Active player indicator.", seen: 1, lastSeen: 0 },
+];

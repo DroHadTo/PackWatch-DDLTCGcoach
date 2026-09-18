@@ -1,0 +1,20 @@
+[
+  {
+    "kind": "observation",
+    "title": "Board changed",
+    "detail": "Read the new board before committing mana or attacks.",
+    "at": "2026-09-17T08:19:55.361610+00:00"
+  },
+  {
+    "kind": "observation",
+    "title": "Board changed",
+    "detail": "Read the new board before committing mana or attacks.",
+    "at": "2026-09-17T07:49:08.227744+00:00"
+  },
+  {
+    "kind": "observation",
+    "title": "Board changed",
+    "detail": "Read the new board before committing mana or attacks.",
+    "at": "2026-09-17T07:49:05.200113+00:00"
+  }
+]

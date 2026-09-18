@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8081/desk",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Pack Watch",
+      "hasCanvas": false,
+      "bodyTextLen": 521,
+      "bodyTextHash": "ab7a7a99378475f62556765fe2e12ea3f82add7e4bea2ba2498596473d6afa9e",
+      "bodyTextPrefix": "SIDECAR Pack Watch This window sits next to Chrome. It watches a",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/desk-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Pack Watch",
+      "hasCanvas": false,
+      "bodyTextLen": 521,
+      "bodyTextHash": "ab7a7a99378475f62556765fe2e12ea3f82add7e4bea2ba2498596473d6afa9e",
+      "bodyTextPrefix": "SIDECAR Pack Watch This window sits next to Chrome. It watches a",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/desk-built-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/desk-built.json"
+}

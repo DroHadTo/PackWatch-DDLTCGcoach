@@ -1,0 +1,7 @@
+{
+  "manifest_version": 3,
+  "name": "Pack Watch (retired)",
+  "version": "0.4.0",
+  "description": "Retired. Remove this add-on — it blocked DDL login. Use the Pack Watch sidecar window instead.",
+  "action": { "default_title": "Pack Watch retired", "default_popup": "popup.html" }
+}
