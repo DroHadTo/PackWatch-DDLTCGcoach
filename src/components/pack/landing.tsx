@@ -2,8 +2,8 @@
 
 export function LandingPage({ onGuest }: { onGuest: () => void }) {
   return (
-    <main className="mx-auto min-h-dvh max-w-5xl px-5 py-6 md:px-10 md:py-10">
-      <header className="flex items-center justify-between gap-4">
+    <main className="pw-shell mx-auto min-h-dvh max-w-5xl px-5 py-6 md:px-10 md:py-10">
+      <header className="pw-reveal flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="grid size-12 place-items-center rounded-xl border border-accent/60 bg-accent/10 text-accent shadow-[0_0_26px_rgba(230,165,47,0.14)]">
             <span className="text-2xl">✦</span>
@@ -14,15 +14,15 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
           </div>
         </div>
         <span className="inline-flex min-h-9 items-center gap-2 rounded-full border border-accent/60 bg-accent/10 px-3 text-xs font-bold text-accent">
-          <span className="size-2 rounded-full bg-accent shadow-[0_0_10px_currentColor]" />
+          <span className="pw-signal size-2 rounded-full bg-accent shadow-[0_0_10px_currentColor]" />
           Advice only
         </span>
       </header>
 
-      <section className="grid gap-10 py-16 md:grid-cols-[1.05fr_0.95fr] md:items-center md:py-24">
+      <section className="pw-stagger grid gap-10 py-16 md:grid-cols-[1.05fr_0.95fr] md:items-center md:py-24">
         <div>
           <p className="font-mono text-xs font-bold tracking-[0.28em] text-accent">/ READ THE BOARD / LEARN THE WHY</p>
-          <h1 className="mt-5 max-w-2xl text-5xl font-black leading-[0.98] tracking-[-0.04em] text-fg md:text-7xl">
+          <h1 className="pw-shimmer mt-5 max-w-2xl text-5xl font-black leading-[0.98] tracking-[-0.04em] text-fg md:text-7xl">
             Make the next choice
             <span className="block text-accent">more explainable.</span>
           </h1>
@@ -37,7 +37,7 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
           </div>
         </div>
 
-        <article className="rounded-2xl border border-border bg-surface/80 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.24)] backdrop-blur">
+        <article className="pw-panel rounded-2xl border border-border bg-surface/80 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.24)] backdrop-blur">
           <div className="flex items-start justify-between border-b border-border pb-4">
             <div>
               <p className="font-mono text-[10px] font-bold tracking-[0.24em] text-accent">FIRST SIGNAL</p>
@@ -63,13 +63,13 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
         </article>
       </section>
 
-      <section className="grid gap-3 border-t border-border pt-6 md:grid-cols-3">
+      <section className="pw-stagger grid gap-3 border-t border-border pt-6 md:grid-cols-3">
         {[
           ["01", "See the position", "Connect any browser or play surface through the local watcher, or paste the board."],
           ["02", "Understand the line", "Official DDLTCG rules and the 111-card snapshot are the ground truth."],
           ["03", "Keep agency", "Packwatch explains. You decide, click, type, and submit."],
         ].map(([n, t, d]) => (
-          <article key={t} className="rounded-xl border border-border bg-surface/55 p-5">
+          <article key={t} className="pw-panel rounded-xl border border-border bg-surface/55 p-5">
             <p className="font-mono text-xs font-bold text-accent">{n}</p>
             <h2 className="mt-4 text-xl font-black text-fg">{t}</h2>
             <p className="mt-2 text-sm leading-6 text-muted">{d}</p>

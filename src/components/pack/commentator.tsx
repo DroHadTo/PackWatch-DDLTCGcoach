@@ -26,7 +26,7 @@ export function CommentatorPage() {
   }, [bridge.board, bridge.advice]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="pw-stagger flex flex-col gap-4">
       <p className="font-mono text-xs tracking-wide text-muted">/ commentator / live call</p>
       <h2 className="font-display text-3xl tracking-tight">Explain the match as it unfolds.</h2>
       <p className="max-w-prose text-sm leading-relaxed text-muted">
@@ -34,7 +34,7 @@ export function CommentatorPage() {
         The commentator never invents actions that were not observed.
       </p>
       <PackwatchLiveBridge bridge={bridge} />
-      <section className="rounded-xl border border-border bg-surface p-4">
+      <section className="pw-panel rounded-xl border border-border bg-surface p-4">
         <div className="flex items-center justify-between gap-3">
           <h3 className="font-display text-xl">Running call</h3>
           <span className="font-mono text-xs text-muted">{events.length} events</span>

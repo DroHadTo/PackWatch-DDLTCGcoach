@@ -19,7 +19,7 @@ export function KnowledgePage() {
   }, [q]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="pw-stagger flex flex-col gap-4">
       <p className="font-mono text-xs tracking-wide text-muted">/ knowledge / rules base</p>
       <h2 className="font-display text-3xl tracking-tight">Facts first. Hypotheses stay marked.</h2>
       <p className="max-w-prose text-sm leading-relaxed text-muted">
@@ -27,12 +27,12 @@ export function KnowledgePage() {
         {OFFICIAL_SNAPSHOT}. Printed card text wins. Wayne V029 is excluded online.
       </p>
       <div className="grid gap-3 sm:grid-cols-3">
-        <p className="rounded-lg border border-border bg-surface px-3 py-2 text-sm">{OFFICIAL_COUNT} cards</p>
-        <p className="rounded-lg border border-border bg-surface px-3 py-2 text-sm">{OFFICIAL_RULES.length} rule sections</p>
-        <p className="rounded-lg border border-border bg-surface px-3 py-2 text-sm">Wayne banned</p>
+        <p className="pw-panel rounded-lg border border-border bg-surface px-3 py-2 text-sm">{OFFICIAL_COUNT} cards</p>
+        <p className="pw-panel rounded-lg border border-border bg-surface px-3 py-2 text-sm">{OFFICIAL_RULES.length} rule sections</p>
+        <p className="pw-panel rounded-lg border border-border bg-surface px-3 py-2 text-sm">Wayne banned</p>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <section className="rounded-xl border border-border bg-surface p-4">
+        <section className="pw-panel rounded-xl border border-border bg-surface p-4">
           <h3 className="font-display text-xl">Official rules</h3>
           <ul className="mt-3 space-y-3">
             {OFFICIAL_RULES.map((r) => (
@@ -43,7 +43,7 @@ export function KnowledgePage() {
             ))}
           </ul>
         </section>
-        <section className="rounded-xl border border-border bg-surface p-4">
+        <section className="pw-panel rounded-xl border border-border bg-surface p-4">
           <h3 className="font-display text-xl">Official cards</h3>
           <input
             value={q}

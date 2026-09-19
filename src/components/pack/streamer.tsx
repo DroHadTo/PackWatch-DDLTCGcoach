@@ -11,7 +11,7 @@ export function StreamerPage() {
   const matching = KICK_TITLE_TERMS.some((term) => title.toLowerCase().includes(term));
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="pw-stagger flex flex-col gap-4">
       <p className="font-mono text-xs tracking-wide text-muted">/ streamer / kick watch</p>
       <h2 className="font-display text-3xl tracking-tight">Follow the DDL stream.</h2>
       <p className="max-w-prose text-sm leading-relaxed text-muted">
@@ -30,7 +30,7 @@ export function StreamerPage() {
           </button>
         ))}
       </div>
-      <section className="overflow-hidden rounded-xl border border-border bg-surface">
+      <section className="pw-panel overflow-hidden rounded-xl border border-border bg-surface">
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <p className="font-mono text-xs text-muted">KICK / {channel}</p>
           <a className="text-xs text-accent underline" href={`https://kick.com/${channel}`} target="_blank" rel="noreferrer">
@@ -45,7 +45,7 @@ export function StreamerPage() {
           allowFullScreen
         />
       </section>
-      <section className="rounded-xl border border-border bg-surface p-4">
+      <section className="pw-panel rounded-xl border border-border bg-surface p-4">
         <p className="font-mono text-xs tracking-wide text-muted">TITLE FILTER</p>
         <p className="mt-1 text-sm text-muted">Only titles containing DDLTCG, Doginal Dogs Legends, or Doginal Dogs TCG qualify for Packwatch tracking.</p>
         <label className="mt-4 block text-xs text-muted" htmlFor="kick-title">Paste the current stream title to check it</label>

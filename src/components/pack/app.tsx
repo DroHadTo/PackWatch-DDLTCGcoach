@@ -223,7 +223,7 @@ function PackAppInner() {
 
   if (!guest) {
     return (
-      <div className="min-h-dvh bg-bg text-fg">
+      <div className="pw-shell min-h-dvh bg-bg text-fg">
         <LandingPage
           onGuest={() => {
             window.sessionStorage.setItem(GUEST_KEY, "true");
@@ -237,11 +237,11 @@ function PackAppInner() {
 
   return (
     <div className="min-h-dvh bg-bg text-fg">
-      <header className="border-b border-border px-4 py-3 md:px-8">
+      <header className="pw-reveal sticky top-0 z-20 border-b border-border/80 bg-bg/90 px-4 py-3 backdrop-blur-xl md:px-8">
         <div className="mx-auto flex max-w-6xl flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <button type="button" onClick={() => b.setTab("watch")} className="text-left">
-            <p className="font-mono text-[10px] tracking-[0.22em] text-muted">DDL COACH / ADVICE ONLY</p>
-            <h1 className="font-display text-2xl tracking-tight">Packwatch</h1>
+          <button type="button" onClick={() => b.setTab("watch")} className="group text-left">
+            <p className="pw-caret font-mono text-[10px] tracking-[0.22em] text-muted transition-colors group-hover:text-accent">DDL COACH / ADVICE ONLY</p>
+            <h1 className="font-display text-2xl tracking-tight transition-transform group-hover:translate-x-1">Packwatch</h1>
           </button>
           <nav className="flex gap-1 overflow-x-auto rounded-lg border border-border bg-surface p-1">
             {NAV_ITEMS.map((item) => (
@@ -249,11 +249,12 @@ function PackAppInner() {
                 key={item.id}
                 type="button"
                 onClick={() => b.setTab(item.id)}
-                className={`min-h-11 shrink-0 rounded-md px-3 text-sm ${
+                className={`relative min-h-11 shrink-0 rounded-md px-3 text-sm transition-all duration-200 ${
                   b.tab === item.id ? "bg-accent text-accent-fg" : "text-muted hover:text-fg"
                 }`}
               >
-                {item.label}
+                {b.tab === item.id && <span className="pw-signal absolute inset-1 rounded-md border border-accent-fg/20" />}
+                <span className="relative">{item.label}</span>
               </button>
             ))}
           </nav>
@@ -305,7 +306,7 @@ function PackAppInner() {
         )}
 
         {b.tab !== "home" && (
-          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_300px]">
+          <div key={b.tab} className="pw-reveal grid gap-4 md:grid-cols-[minmax(0,1fr)_300px]">
             <section className="min-w-0">
               {b.tab === "arena" && (
                 <div className="flex flex-col gap-3">
