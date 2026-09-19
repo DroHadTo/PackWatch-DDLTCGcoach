@@ -23,7 +23,7 @@ interface Brain {
   lastScan: string;
   lastDeck: BuiltDeck | null;
   lessons: Lesson[];
-  tab: "home" | "watch" | "arena" | "brain" | "progress" | "knowledge";
+  tab: "home" | "watch" | "arena" | "brain" | "progress" | "knowledge" | "streamer" | "commentator";
   coachLine: CoachLine;
   ask: string;
   askReply: string;

@@ -7,6 +7,8 @@ import { LandingPage } from "@/components/pack/landing";
 import { PackwatchLiveBridge } from "@/components/pack/live-bridge";
 import { CoachPanels } from "@/components/pack/panels";
 import { ProgressPage } from "@/components/pack/progress";
+import { StreamerPage } from "@/components/pack/streamer";
+import { CommentatorPage } from "@/components/pack/commentator";
 import { ScreenWatch, openCompanion } from "@/components/pack/screen-watch";
 import { answerQuestion, answerWatch } from "@/lib/ddl/coach";
 import { DECK_CLASSES, groupDeck } from "@/lib/ddl/deck";
@@ -572,6 +574,8 @@ function PackAppInner() {
 
               {b.tab === "progress" && <ProgressPage />}
               {b.tab === "knowledge" && <KnowledgePage />}
+              {b.tab === "streamer" && <StreamerPage />}
+              {b.tab === "commentator" && <CommentatorPage />}
             </section>
 
             <aside className="flex flex-col gap-3">
