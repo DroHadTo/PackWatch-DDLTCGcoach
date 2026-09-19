@@ -4,6 +4,7 @@ __pycache__/
 **/__pycache__/
 .project_id
 .github_repo
+.vercel/
 .env
 .env.*
 packwatch/data/*.json

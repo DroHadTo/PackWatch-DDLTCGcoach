@@ -44,7 +44,7 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
 
         <article className="pw-panel relative overflow-hidden rounded-2xl border border-border bg-surface/80 p-3 shadow-[0_20px_80px_rgba(0,0,0,0.24)] backdrop-blur">
           <div className="pw-hero-art relative overflow-hidden rounded-xl border border-accent/30">
-            <img src="/packwatch-coach.png" alt="Packwatch DDLTCG Coach logo" className="block aspect-[1.35] w-full object-contain object-center" />
+            <img src="/packwatch-coach.jpg" alt="Packwatch DDLTCG Coach logo" className="block aspect-[1.35] w-full object-cover object-center" />
             <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-[#120c08]/85 px-4 py-3 backdrop-blur">
               <span className="font-mono text-[10px] font-bold tracking-[0.22em] text-accent">PACKWATCH / COACH</span>
               <span className="text-xs text-fg">Coach online</span>
