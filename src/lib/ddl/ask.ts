@@ -1,8 +1,21 @@
 import { createServerFn } from "@tanstack/react-start";
+import { enforceRateLimit } from "@/lib/rate-limit.server";
 
 export const askCoach = createServerFn({ method: "POST" })
-  .validator((input: { question: string; board: string }) => input)
+  .validator((input: { question: string; board: string }) => {
+    if (
+      !input ||
+      typeof input.question !== "string" ||
+      typeof input.board !== "string" ||
+      input.question.length > 400 ||
+      input.board.length > 2500
+    ) {
+      throw new Error("Invalid coach request.");
+    }
+    return input;
+  })
   .handler(async ({ data }) => {
+    await enforceRateLimit({ bucket: "expensive", failClosed: true });
     const apiKey = process.env.XAI_API_KEY;
     if (!apiKey) return { ok: false as const, error: "Live Grok is unavailable here. Use the rules coach." };
     const res = await fetch("https://api.x.ai/v1/chat/completions", {

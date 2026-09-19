@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { enforceRateLimit } from "@/lib/rate-limit.server";
 
 function extractLabels(html: string) {
   const text = html
@@ -39,6 +40,7 @@ function extractLabels(html: string) {
 }
 
 export const scanOfficial = createServerFn({ method: "POST" }).handler(async () => {
+  await enforceRateLimit({ bucket: "search", failClosed: true });
   const urls = ["https://ddltcg.com/play", "https://ddltcg.com/rules", "https://ddltcg.com/gallery"];
   const pages: { url: string; ok: boolean; found: string[]; extra: string[]; textSlice: string }[] = [];
   for (const url of urls) {

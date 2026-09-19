@@ -1,8 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
+import { enforceRateLimit } from "@/lib/rate-limit.server";
 
 export const learnFrame = createServerFn({ method: "POST" })
-  .validator((input: { image: string }) => input)
+  .validator((input: { image: string }) => {
+    if (!input || typeof input.image !== "string" || input.image.length > 900_000) {
+      throw new Error("Invalid frame.");
+    }
+    return input;
+  })
   .handler(async ({ data }) => {
+    await enforceRateLimit({ bucket: "expensive", failClosed: true });
     const apiKey = process.env.XAI_API_KEY;
     if (!apiKey) return { ok: false as const, error: "Vision is unavailable. Paste board text instead." };
     const image = data.image.slice(0, 900_000);

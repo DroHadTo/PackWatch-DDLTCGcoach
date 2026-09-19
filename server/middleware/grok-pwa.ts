@@ -17,6 +17,12 @@
 import installPageTemplate from "../../scripts/install-page.html?raw";
 import { grokOgIdentity } from "virtual:grok-og-identity";
 import {
+  enforceRateLimit,
+  rateLimitHeaders,
+  RateLimitError,
+  type RateLimitBucket,
+} from "../../src/lib/rate-limit.server";
+import {
   acceptsHtml,
   createHeadInjector,
   isDocumentPath,
@@ -72,14 +78,50 @@ function injectHeadStreaming(response: Response, host: string): Response {
   });
 }
 
+function rateLimitBucket(path: string): { bucket: RateLimitBucket; failClosed: boolean } | null {
+  if (path === "/api/pack-watch-ext.zip") {
+    return { bucket: "public-read", failClosed: false };
+  }
+  if (path === "/api/auth" || path.startsWith("/api/auth/")) return { bucket: "auth", failClosed: true };
+  return null;
+}
+
 export default async function grokPwaMiddleware(
   event: GrokPwaEvent,
   next: () => unknown | Promise<unknown>,
 ): Promise<unknown> {
   const method = (event.req.method ?? "GET").toUpperCase();
-  if (method !== "GET") return next();
-
   const path = event.url.pathname;
+  const rateLimit = rateLimitBucket(path);
+  let headers: Headers | undefined;
+  if (rateLimit) {
+    try {
+      const decision = await enforceRateLimit({
+        bucket: rateLimit.bucket,
+        failClosed: rateLimit.failClosed,
+        request: new Request(event.url, { method, headers: event.req.headers }),
+      });
+      headers = rateLimitHeaders(decision);
+    } catch (error) {
+      if (error instanceof RateLimitError) {
+        const responseHeaders = rateLimitHeaders(error.decision);
+        responseHeaders.set("Content-Type", "application/json; charset=utf-8");
+        return Response.json({ error: "Too many requests. Please try again later." }, { status: 429, headers: responseHeaders });
+      }
+      console.error("[packwatch] rate limiter unavailable", error);
+      return Response.json({ error: "Request protection is temporarily unavailable." }, { status: 503 });
+    }
+  }
+  if (method !== "GET") {
+    const result = await next();
+    if (result instanceof Response && headers) {
+      const responseHeaders = new Headers(result.headers);
+      headers.forEach((value, key) => responseHeaders.set(key, value));
+      return new Response(result.body, { status: result.status, statusText: result.statusText, headers: responseHeaders });
+    }
+    return result;
+  }
+
   const urlWithQuery = path + event.url.search;
 
   if (path === "/__grok/manifest.webmanifest" || path === "/__grok/manifest.json") {
@@ -87,6 +129,7 @@ export default async function grokPwaMiddleware(
       headers: {
         "content-type": "application/manifest+json; charset=utf-8",
         "cache-control": "no-cache",
+        ...(headers ? Object.fromEntries(headers.entries()) : {}),
       },
     }));
   }
@@ -104,11 +147,20 @@ export default async function grokPwaMiddleware(
       headers: {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "no-cache",
+        ...(headers ? Object.fromEntries(headers.entries()) : {}),
       },
     }));
   }
 
-  if (!isDocumentPath(path)) return next();
+  if (!isDocumentPath(path)) {
+    const result = await next();
+    if (result instanceof Response && headers) {
+      const responseHeaders = new Headers(result.headers);
+      headers.forEach((value, key) => responseHeaders.set(key, value));
+      return new Response(result.body, { status: result.status, statusText: result.statusText, headers: responseHeaders });
+    }
+    return result;
+  }
 
   const result = await next();
   if (
@@ -118,6 +170,15 @@ export default async function grokPwaMiddleware(
     !result.headers.get("content-encoding")
   ) {
     return withSecurityHeaders(injectHeadStreaming(result, requestHost(event)));
+  }
+  if (result instanceof Response && headers) {
+    const responseHeaders = new Headers(result.headers);
+    headers.forEach((value, key) => responseHeaders.set(key, value));
+    return withSecurityHeaders(new Response(result.body, {
+      status: result.status,
+      statusText: result.statusText,
+      headers: responseHeaders,
+    }));
   }
   return result instanceof Response ? withSecurityHeaders(result) : result;
 }

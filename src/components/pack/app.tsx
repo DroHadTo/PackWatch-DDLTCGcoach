@@ -9,6 +9,7 @@ import { CoachPanels } from "@/components/pack/panels";
 import { ProgressPage } from "@/components/pack/progress";
 import { StreamerPage } from "@/components/pack/streamer";
 import { CommentatorPage } from "@/components/pack/commentator";
+import { ConsentPanel } from "@/components/pack/consent-panel";
 import { ScreenWatch, openCompanion } from "@/components/pack/screen-watch";
 import { answerQuestion, answerWatch } from "@/lib/ddl/coach";
 import { DECK_CLASSES, groupDeck } from "@/lib/ddl/deck";
@@ -243,21 +244,24 @@ function PackAppInner() {
             <p className="pw-caret font-mono text-[10px] tracking-[0.22em] text-muted transition-colors group-hover:text-accent">DDL COACH / ADVICE ONLY</p>
             <h1 className="font-display text-2xl tracking-tight transition-transform group-hover:translate-x-1">Packwatch</h1>
           </button>
-          <nav className="flex gap-1 overflow-x-auto rounded-lg border border-border bg-surface p-1">
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => b.setTab(item.id)}
-                className={`relative min-h-11 shrink-0 rounded-md px-3 text-sm transition-all duration-200 ${
-                  b.tab === item.id ? "bg-accent text-accent-fg" : "text-muted hover:text-fg"
-                }`}
-              >
-                {b.tab === item.id && <span className="pw-signal absolute inset-1 rounded-md border border-accent-fg/20" />}
-                <span className="relative">{item.label}</span>
-              </button>
-            ))}
-          </nav>
+          <div className="flex min-w-0 items-center gap-2">
+            <nav className="flex min-w-0 gap-1 overflow-x-auto rounded-lg border border-border bg-surface p-1">
+              {NAV_ITEMS.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => b.setTab(item.id)}
+                  className={`relative min-h-11 shrink-0 rounded-md px-3 text-sm transition-all duration-200 ${
+                    b.tab === item.id ? "bg-accent text-accent-fg" : "text-muted hover:text-fg"
+                  }`}
+                >
+                  {b.tab === item.id && <span className="pw-signal absolute inset-1 rounded-md border border-accent-fg/20" />}
+                  <span className="relative">{item.label}</span>
+                </button>
+              ))}
+            </nav>
+            <ConsentPanel />
+          </div>
         </div>
       </header>
 

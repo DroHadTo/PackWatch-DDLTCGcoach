@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DeskRouteImport } from './routes/desk'
+import { Route as ApiConsentRouteImport } from './routes/api/consent'
 import { Route as ApiDdlCardsRouteImport } from './routes/api/ddl-cards'
 import { Route as ApiPackWatchExtDotzipRouteImport } from './routes/api/pack-watch-ext[.]zip'
+import { Route as ApiLearningShareRouteImport } from './routes/api/learning/share'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const DeskRoute = DeskRouteImport.update({
   id: '/desk',
   path: '/desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiConsentRoute = ApiConsentRouteImport.update({
+  id: '/api/consent',
+  path: '/api/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiDdlCardsRoute = ApiDdlCardsRouteImport.update({
@@ -34,39 +41,71 @@ const ApiPackWatchExtDotzipRoute = ApiPackWatchExtDotzipRouteImport.update({
   path: '/api/pack-watch-ext.zip',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiLearningShareRoute = ApiLearningShareRouteImport.update({
+  id: '/api/learning/share',
+  path: '/api/learning/share',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/consent': typeof ApiConsentRoute
   '/api/ddl-cards': typeof ApiDdlCardsRoute
   '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
+  '/api/learning/share': typeof ApiLearningShareRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/consent': typeof ApiConsentRoute
   '/api/ddl-cards': typeof ApiDdlCardsRoute
   '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
+  '/api/learning/share': typeof ApiLearningShareRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/consent': typeof ApiConsentRoute
   '/api/ddl-cards': typeof ApiDdlCardsRoute
   '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
+  '/api/learning/share': typeof ApiLearningShareRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/desk' | '/api/ddl-cards' | '/api/pack-watch-ext.zip'
+  fullPaths:
+    | '/'
+    | '/desk'
+    | '/api/consent'
+    | '/api/ddl-cards'
+    | '/api/pack-watch-ext.zip'
+    | '/api/learning/share'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/desk' | '/api/ddl-cards' | '/api/pack-watch-ext.zip'
-  id: '__root__' | '/' | '/desk' | '/api/ddl-cards' | '/api/pack-watch-ext.zip'
+  to:
+    | '/'
+    | '/desk'
+    | '/api/consent'
+    | '/api/ddl-cards'
+    | '/api/pack-watch-ext.zip'
+    | '/api/learning/share'
+  id:
+    | '__root__'
+    | '/'
+    | '/desk'
+    | '/api/consent'
+    | '/api/ddl-cards'
+    | '/api/pack-watch-ext.zip'
+    | '/api/learning/share'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DeskRoute: typeof DeskRoute
+  ApiConsentRoute: typeof ApiConsentRoute
   ApiDdlCardsRoute: typeof ApiDdlCardsRoute
   ApiPackWatchExtDotzipRoute: typeof ApiPackWatchExtDotzipRoute
+  ApiLearningShareRoute: typeof ApiLearningShareRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -85,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeskRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/consent': {
+      id: '/api/consent'
+      path: '/api/consent'
+      fullPath: '/api/consent'
+      preLoaderRoute: typeof ApiConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/ddl-cards': {
       id: '/api/ddl-cards'
       path: '/api/ddl-cards'
@@ -99,14 +145,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPackWatchExtDotzipRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/learning/share': {
+      id: '/api/learning/share'
+      path: '/api/learning/share'
+      fullPath: '/api/learning/share'
+      preLoaderRoute: typeof ApiLearningShareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DeskRoute: DeskRoute,
+  ApiConsentRoute: ApiConsentRoute,
   ApiDdlCardsRoute: ApiDdlCardsRoute,
   ApiPackWatchExtDotzipRoute: ApiPackWatchExtDotzipRoute,
+  ApiLearningShareRoute: ApiLearningShareRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
