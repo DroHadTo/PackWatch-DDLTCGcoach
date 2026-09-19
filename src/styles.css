@@ -97,6 +97,12 @@
   opacity: 1;
 }
 
+.pw-hero-art {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(230, 165, 47, 0.28), transparent 42%),
+    linear-gradient(135deg, #2a1a0e, #120c08 72%);
+}
+
 .pw-reveal {
   animation: pw-reveal 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }

@@ -21,7 +21,7 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
 
       <section className="pw-stagger grid gap-10 py-16 md:grid-cols-[1fr_0.9fr] md:items-center md:py-24">
         <div>
-          <p className="font-mono text-xs font-bold tracking-[0.28em] text-accent">/ DDLTCG COACH / MVP PREVIEW</p>
+          <p className="font-mono text-xs font-bold tracking-[0.28em] text-accent">/ DDLTCG COACH / EARLY ACCESS</p>
           <h1 className="pw-shimmer mt-5 max-w-2xl text-5xl font-black leading-[0.98] tracking-[-0.04em] text-fg md:text-7xl">
             Play with a
             <span className="block text-accent">clearer line.</span>
@@ -33,7 +33,7 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
             <button type="button" onClick={onGuest} className="min-h-14 rounded-lg bg-accent px-7 text-sm font-black text-accent-fg shadow-[0_8px_30px_rgba(230,165,47,0.18)] transition-transform hover:-translate-y-0.5">
               Enter the coach
             </button>
-            <p className="self-center text-sm text-muted">Try the MVP instantly. No game login.</p>
+            <p className="self-center text-sm text-muted">Try the coach instantly. No game login.</p>
           </div>
           <div className="mt-8 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-faint">
             <span>Read-only watcher</span>
@@ -43,10 +43,10 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
         </div>
 
         <article className="pw-panel relative overflow-hidden rounded-2xl border border-border bg-surface/80 p-3 shadow-[0_20px_80px_rgba(0,0,0,0.24)] backdrop-blur">
-          <div className="relative overflow-hidden rounded-xl border border-accent/30 bg-[#e8e1d4]">
-            <img src="/packwatch-coach.jpg" alt="Packwatch DDLTCG Coach logo" className="block aspect-[1.35] w-full object-cover" />
+          <div className="pw-hero-art relative overflow-hidden rounded-xl border border-accent/30">
+            <img src="/packwatch-coach.png" alt="Packwatch DDLTCG Coach logo" className="block aspect-[1.35] w-full object-contain object-center" />
             <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-[#120c08]/85 px-4 py-3 backdrop-blur">
-              <span className="font-mono text-[10px] font-bold tracking-[0.22em] text-accent">PACKWATCH / MVP</span>
+              <span className="font-mono text-[10px] font-bold tracking-[0.22em] text-accent">PACKWATCH / COACH</span>
               <span className="text-xs text-fg">Coach online</span>
             </div>
           </div>
@@ -56,7 +56,7 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
               <p className="font-mono text-[10px] font-bold tracking-[0.24em] text-accent">WHAT YOU GET</p>
               <p className="mt-2 text-2xl font-black text-fg">A second set of eyes.</p>
             </div>
-            <span className="rounded-full border border-ok/50 px-2.5 py-1 text-xs text-ok">MVP</span>
+            <span className="rounded-full border border-ok/50 px-2.5 py-1 text-xs text-ok">LIVE</span>
           </div>
           <div className="space-y-5 py-5 text-sm">
             <div>
@@ -80,7 +80,7 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
       <section className="border-t border-border pt-8">
         <div className="mb-5 flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
           <div>
-            <p className="font-mono text-[10px] font-bold tracking-[0.24em] text-accent">THE MVP LOOP</p>
+            <p className="font-mono text-[10px] font-bold tracking-[0.24em] text-accent">THE COACHING LOOP</p>
             <h2 className="mt-2 text-2xl font-black text-fg">From board state to better decisions.</h2>
           </div>
           <p className="max-w-sm text-sm leading-6 text-muted">One calm workflow for live coaching, practice, deck building and learning.</p>

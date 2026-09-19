@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DeskRouteImport } from './routes/desk'
+import { Route as ApiDdlCardsRouteImport } from './routes/api/ddl-cards'
 import { Route as ApiPackWatchExtDotzipRouteImport } from './routes/api/pack-watch-ext[.]zip'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const DeskRoute = DeskRouteImport.update({
   path: '/desk',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDdlCardsRoute = ApiDdlCardsRouteImport.update({
+  id: '/api/ddl-cards',
+  path: '/api/ddl-cards',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPackWatchExtDotzipRoute = ApiPackWatchExtDotzipRouteImport.update({
   id: '/api/pack-watch-ext.zip',
   path: '/api/pack-watch-ext.zip',
@@ -32,30 +38,34 @@ const ApiPackWatchExtDotzipRoute = ApiPackWatchExtDotzipRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/ddl-cards': typeof ApiDdlCardsRoute
   '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/ddl-cards': typeof ApiDdlCardsRoute
   '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/desk': typeof DeskRoute
+  '/api/ddl-cards': typeof ApiDdlCardsRoute
   '/api/pack-watch-ext.zip': typeof ApiPackWatchExtDotzipRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/desk' | '/api/pack-watch-ext.zip'
+  fullPaths: '/' | '/desk' | '/api/ddl-cards' | '/api/pack-watch-ext.zip'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/desk' | '/api/pack-watch-ext.zip'
-  id: '__root__' | '/' | '/desk' | '/api/pack-watch-ext.zip'
+  to: '/' | '/desk' | '/api/ddl-cards' | '/api/pack-watch-ext.zip'
+  id: '__root__' | '/' | '/desk' | '/api/ddl-cards' | '/api/pack-watch-ext.zip'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DeskRoute: typeof DeskRoute
+  ApiDdlCardsRoute: typeof ApiDdlCardsRoute
   ApiPackWatchExtDotzipRoute: typeof ApiPackWatchExtDotzipRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeskRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/ddl-cards': {
+      id: '/api/ddl-cards'
+      path: '/api/ddl-cards'
+      fullPath: '/api/ddl-cards'
+      preLoaderRoute: typeof ApiDdlCardsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/pack-watch-ext.zip': {
       id: '/api/pack-watch-ext.zip'
       path: '/api/pack-watch-ext.zip'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DeskRoute: DeskRoute,
+  ApiDdlCardsRoute: ApiDdlCardsRoute,
   ApiPackWatchExtDotzipRoute: ApiPackWatchExtDotzipRoute,
 }
 export const routeTree = rootRouteImport
