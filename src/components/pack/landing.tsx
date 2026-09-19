@@ -5,8 +5,8 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
     <main className="pw-shell mx-auto min-h-dvh max-w-6xl px-5 py-6 md:px-10 md:py-10">
       <header className="pw-reveal flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="grid size-12 place-items-center rounded-xl border border-accent/60 bg-accent/10 text-accent shadow-[0_0_26px_rgba(230,165,47,0.14)]">
-            <span className="text-2xl">✦</span>
+          <div className="grid size-12 place-items-center overflow-hidden rounded-xl border border-accent/60 bg-[#120c08] shadow-[0_0_26px_rgba(230,165,47,0.14)]">
+            <img src="/packwatch-coach.jpg" alt="Packwatch logo" className="size-full object-cover" />
           </div>
           <div>
             <p className="font-mono text-[11px] font-bold tracking-[0.28em] text-accent">PACKWATCH</p>
@@ -44,7 +44,7 @@ export function LandingPage({ onGuest }: { onGuest: () => void }) {
 
         <article className="pw-panel relative overflow-hidden rounded-2xl border border-border bg-surface/80 p-3 shadow-[0_20px_80px_rgba(0,0,0,0.24)] backdrop-blur">
           <div className="pw-hero-art relative overflow-hidden rounded-xl border border-accent/30">
-            <img src="/packwatch-coach.jpg" alt="Packwatch DDLTCG Coach logo" className="block aspect-[1.35] w-full object-cover object-center" />
+            <img src="/packwatch-coach.jpg" alt="Packwatch DDLTCG Coach logo" className="block aspect-[3/2] w-full object-contain object-center" />
             <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-[#120c08]/85 px-4 py-3 backdrop-blur">
               <span className="font-mono text-[10px] font-bold tracking-[0.22em] text-accent">PACKWATCH / COACH</span>
               <span className="text-xs text-fg">Coach online</span>

@@ -30,6 +30,18 @@ interface GrokPwaEvent {
   req: { method: string; headers: Headers };
 }
 
+function withSecurityHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 function requestHost(event: GrokPwaEvent): string {
   return (
     event.req.headers.get("x-forwarded-host") ?? event.req.headers.get("host") ?? event.url.host
@@ -71,12 +83,12 @@ export default async function grokPwaMiddleware(
   const urlWithQuery = path + event.url.search;
 
   if (path === "/__grok/manifest.webmanifest" || path === "/__grok/manifest.json") {
-    return new Response(renderWebManifest(requestHost(event)), {
+    return withSecurityHeaders(new Response(renderWebManifest(requestHost(event)), {
       headers: {
         "content-type": "application/manifest+json; charset=utf-8",
         "cache-control": "no-cache",
       },
-    });
+    }));
   }
 
   if (
@@ -88,12 +100,12 @@ export default async function grokPwaMiddleware(
       host: requestHost(event),
       url: urlWithQuery,
     });
-    return new Response(html, {
+    return withSecurityHeaders(new Response(html, {
       headers: {
         "content-type": "text/html; charset=utf-8",
         "cache-control": "no-cache",
       },
-    });
+    }));
   }
 
   if (!isDocumentPath(path)) return next();
@@ -105,7 +117,7 @@ export default async function grokPwaMiddleware(
     String(result.headers.get("content-type") ?? "").includes("text/html") &&
     !result.headers.get("content-encoding")
   ) {
-    return injectHeadStreaming(result, requestHost(event));
+    return withSecurityHeaders(injectHeadStreaming(result, requestHost(event)));
   }
-  return result;
+  return result instanceof Response ? withSecurityHeaders(result) : result;
 }
