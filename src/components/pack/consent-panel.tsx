@@ -51,6 +51,10 @@ export function ConsentPanel() {
                 <p className="font-medium text-fg">If you keep it local</p>
                 <p className="mt-1 leading-relaxed text-muted">Your own bot can continue learning from your local browser data. No training or collection request is made, and nothing is uploaded for shared learning.</p>
               </div>
+              <div className="rounded-lg border border-border bg-bg p-3">
+                <p className="font-medium text-fg">Optional AI explanations are separate</p>
+                <p className="mt-1 leading-relaxed text-muted">The live bridge has its own opt-in. Only a manual board-text question is sent to the configured provider, and that request is not used as Packwatch shared training.</p>
+              </div>
             </div>
             <p className="mt-4 text-xs text-faint">Policy {CONSENT_POLICY_VERSION}. You can withdraw at any time; withdrawal stops future uploads and removes stored contributions from your account.</p>
             {error && <p className="mt-3 rounded-md border border-danger/50 px-3 py-2 text-sm text-danger">{error}</p>}
