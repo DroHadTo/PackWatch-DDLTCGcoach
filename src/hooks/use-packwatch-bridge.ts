@@ -24,10 +24,25 @@ export type LiveAdvice = {
   updatedAt?: string;
 };
 
+export type LiveBoardSnapshot = {
+  turn?: "you" | "opp" | "unknown";
+  yourHp?: number | null;
+  foeHp?: number | null;
+  yourMana?: number | null;
+  yourMaxMana?: number | null;
+  round?: number | null;
+  yourHand?: string[];
+  yourLanes?: unknown[];
+  foeLanes?: unknown[];
+  readQuality?: { complete: boolean; missing: string[] };
+  readAt?: string;
+};
+
 export type PackwatchBridgeState = {
   endpoint: string;
   status: BridgeStatus;
   board: string;
+  snapshot: LiveBoardSnapshot | null;
   advice: LiveAdvice | null;
   lastSeen: string | null;
   latencyMs: number | null;
@@ -50,7 +65,15 @@ function pickBoard(payload: unknown): string {
     const candidate = record.board ?? record.boardState ?? record.text ?? record.live;
     if (candidate != null) return stringifyPayload(candidate);
   }
+
   return stringifyPayload(payload);
+}
+
+function pickSnapshot(payload: unknown): LiveBoardSnapshot | null {
+  if (!payload || typeof payload !== "object") return null;
+  const record = payload as Record<string, unknown>;
+  const candidate = record.snapshot ?? record.board_snapshot ?? record.live_snapshot;
+  return candidate && typeof candidate === "object" ? (candidate as LiveBoardSnapshot) : null;
 }
 
 function pickAdvice(payload: unknown): LiveAdvice {
@@ -94,6 +117,7 @@ export function usePackwatchBridge(): PackwatchBridgeState {
   const [endpoint, setEndpoint] = useState(DEFAULT_BRIDGE);
   const [status, setStatus] = useState<BridgeStatus>("idle");
   const [board, setBoard] = useState("");
+  const [snapshot, setSnapshot] = useState<LiveBoardSnapshot | null>(null);
   const [advice, setAdvice] = useState<LiveAdvice | null>(null);
   const [lastSeen, setLastSeen] = useState<string | null>(null);
   const [latencyMs, setLatencyMs] = useState<number | null>(null);
@@ -137,6 +161,7 @@ export function usePackwatchBridge(): PackwatchBridgeState {
           readJson(`${base}/advice`, requestController.signal),
         ]);
         const nextBoard = pickBoard(livePayload);
+        const nextSnapshot = pickSnapshot(livePayload);
         const nextAdvice = pickAdvice(advicePayload);
         const boardFingerprint = nextBoard;
         const adviceFingerprint = JSON.stringify(nextAdvice);
@@ -144,6 +169,7 @@ export function usePackwatchBridge(): PackwatchBridgeState {
           lastBoardFingerprint = boardFingerprint;
           setBoard(nextBoard);
         }
+        if (nextSnapshot) setSnapshot(nextSnapshot);
         if (adviceFingerprint !== lastAdviceFingerprint) {
           lastAdviceFingerprint = adviceFingerprint;
           setAdvice(nextAdvice);
@@ -184,6 +210,7 @@ export function usePackwatchBridge(): PackwatchBridgeState {
     endpoint,
     status,
     board,
+    snapshot,
     advice,
     lastSeen,
     latencyMs,

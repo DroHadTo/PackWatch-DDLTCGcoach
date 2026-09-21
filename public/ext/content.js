@@ -47,6 +47,8 @@
     });
     labels = labels.slice(0, 80);
     var turn = /YOUR TURN/.test(upper) ? "you" : /OPPONENT|ENEMY TURN|THEIR TURN/.test(upper) ? "opp" : "unknown";
+    var roundMatch = upper.match(/\bROUND\s+(\d+)\b/);
+    var manaMatch = t.match(/\b(?:MANA|ENERGY)\s*(\d{1,2})\s*\/\s*(\d{1,2})\b/i);
     var hps = [];
     var re = /(\d{1,2})\s*\/\s*40/g;
     var m;
@@ -60,14 +62,36 @@
     try {
       canvases = document.querySelectorAll("canvas").length;
     } catch (e) { /* ignore */ }
+    var handText = t.split(/YOUR HAND/i)[1] || "";
+    var handCards = [];
+    NAMES.forEach(function (n) {
+      var rx = new RegExp("\\b" + n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i");
+      if (rx.test(handText)) handCards.push(n);
+    });
+    var missing = [];
+    if (!turn || turn === "unknown") missing.push("turn");
+    if (hps.length < 2) missing.push("hero HP");
+    if (!manaMatch) missing.push("mana");
     return {
       turn: turn,
-      youHP: hps[0] || null,
-      oppHP: hps[1] || null,
+      yourHp: hps[1] || null,
+      foeHp: hps[0] || null,
+      youHP: hps[1] || null,
+      oppHP: hps[0] || null,
+      yourMana: manaMatch ? parseInt(manaMatch[1], 10) : null,
+      yourMaxMana: manaMatch ? parseInt(manaMatch[2], 10) : null,
+      round: roundMatch ? parseInt(roundMatch[1], 10) : null,
+      yourHand: handCards.slice(0, 20),
+      yourLanes: [null, null, null, null, null],
+      foeLanes: [null, null, null, null, null],
+      yourGrave: null,
+      foeGrave: null,
       labels: labels,
       cards: cards.slice(0, 20),
       canvases: canvases,
       snippet: t.slice(0, 1200),
+      readQuality: { complete: missing.length === 0, missing: missing },
+      readAt: new Date().toISOString(),
       t: Date.now(),
     };
   }
@@ -281,6 +305,7 @@
   function tick() {
     ticks += 1;
     var s = scrape();
+    try { chrome.runtime.sendMessage({ type: "pw-snapshot", snapshot: s }); } catch (e) {}
     var hash = s.turn + "|" + s.youHP + "|" + s.oppHP + "|" + s.labels.join(",") + "|" + s.cards.join(",");
     paint(s);
     if (hash !== lastHash) {
