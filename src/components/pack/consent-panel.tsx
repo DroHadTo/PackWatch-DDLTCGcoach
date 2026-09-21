@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { useConsent } from "@/lib/learning/use-consent";
 import { CONSENT_POLICY_VERSION } from "@/lib/learning/policy";
 
@@ -8,6 +9,10 @@ export function ConsentPanel() {
   const { consent, error, update, withdraw } = useConsent();
   const [open, setOpen] = useState(consent.status === "unset");
   const [saving, setSaving] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   useEffect(() => {
     if (consent.status !== "unset") setOpen(false);
   }, [consent.status]);
@@ -34,9 +39,9 @@ export function ConsentPanel() {
       >
         Sharing: {consent.status === "granted" ? "on" : "local"}
       </button>
-      {open && (
-        <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/70 p-4 pt-4" role="dialog" aria-modal="true" aria-labelledby="consent-title">
-          <section className="pw-panel mb-4 max-h-[calc(100dvh-2rem)] w-full max-w-xl overflow-y-auto rounded-2xl border border-border bg-surface p-4 shadow-2xl sm:p-6">
+      {mounted && open && createPortal(
+        <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-black/70 p-4 sm:items-center" role="dialog" aria-modal="true" aria-labelledby="consent-title">
+          <section className="mb-4 max-h-[calc(100dvh-2rem)] w-full max-w-xl overflow-y-auto overscroll-contain rounded-2xl border border-border bg-surface p-4 shadow-2xl sm:mb-0 sm:p-6">
             <p className="font-mono text-xs tracking-[0.2em] text-muted">LEARNING PRIVACY</p>
             <h2 id="consent-title" className="mt-2 font-display text-2xl">Choose where learning stays.</h2>
             <p className="mt-3 text-sm leading-relaxed text-muted">
@@ -82,7 +87,8 @@ export function ConsentPanel() {
               )}
             </div>
           </section>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
