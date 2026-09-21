@@ -3,7 +3,10 @@
 import { askCoach } from "@/lib/ddl/ask";
 import { useAiConsent } from "@/lib/learning/use-ai-consent";
 import type { PackwatchBridgeState } from "@/hooks/use-packwatch-bridge";
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+const AI_CONTINUOUS_LIMIT = 12;
+const AI_CONTINUOUS_WINDOW_MS = 10 * 60 * 1000;
 
 export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }) {
   const ai = useAiConsent();
@@ -11,7 +14,22 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
   const [explanation, setExplanation] = useState("");
   const [aiError, setAiError] = useState("");
   const [asking, setAsking] = useState(false);
+  const [continuous, setContinuous] = useState(false);
+  const [continuousCount, setContinuousCount] = useState(0);
+  const requestInFlight = useRef(false);
+  const lastRequestedBoard = useRef("");
+  const requestTimes = useRef<number[]>([]);
   const connected = bridge.status === "connected";
+  const boardSignal = useMemo(
+    () => {
+      const snapshot = bridge.snapshot;
+      const stableSnapshot = snapshot
+        ? { ...snapshot, readAt: undefined }
+        : null;
+      return `${bridge.board}\n${bridge.advice?.recommendation ?? ""}\n${JSON.stringify(stableSnapshot)}`;
+    },
+    [bridge.advice?.recommendation, bridge.board, bridge.snapshot],
+  );
   const busy = bridge.status === "connecting";
   const statusLabel =
     connected ? "live" : busy ? "connecting" : bridge.status === "idle" ? "standby" : "offline";
@@ -19,8 +37,24 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
     ? new Date(bridge.lastSeen).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })
     : "Not yet received";
 
-  async function askExternalCoach() {
-    if (ai.consent !== "granted" || asking) return;
+  const askExternalCoach = useCallback(async (automatic = false) => {
+    if (ai.consent !== "granted" || requestInFlight.current) return;
+    const board = `${bridge.board}\n\nCurrent local advice: ${bridge.advice?.recommendation ?? "none"}`;
+    const boardFingerprint = boardSignal;
+    if (automatic && boardFingerprint === lastRequestedBoard.current) return;
+    const now = Date.now();
+    requestTimes.current = requestTimes.current.filter((time) => now - time < AI_CONTINUOUS_WINDOW_MS);
+    if (automatic && requestTimes.current.length >= AI_CONTINUOUS_LIMIT) {
+      setAiError("Continuous AI paused after 12 analyses in 10 minutes. Start it again when you want to continue.");
+      setContinuous(false);
+      return;
+    }
+    requestInFlight.current = true;
+    if (automatic) {
+      lastRequestedBoard.current = boardFingerprint;
+      requestTimes.current.push(now);
+      setContinuousCount(requestTimes.current.length);
+    }
     setAsking(true);
     setAiError("");
     try {
@@ -28,7 +62,7 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
         data: {
           aiConsent: true,
           question: question.trim().slice(0, 400) || "What should I do right now?",
-          board: `${bridge.board}\n\nCurrent local advice: ${bridge.advice?.recommendation ?? "none"}`,
+          board,
         },
       });
       if (result.ok) setExplanation(result.text);
@@ -37,8 +71,23 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
       setAiError(error instanceof Error ? error.message : "External AI is unavailable.");
     } finally {
       setAsking(false);
+      requestInFlight.current = false;
     }
-  }
+  }, [ai.consent, boardSignal, bridge.advice?.recommendation, bridge.board, question]);
+
+  useEffect(() => {
+    if (!continuous || ai.consent !== "granted" || !connected || asking) return;
+    void askExternalCoach(true);
+  }, [askExternalCoach, ai.consent, asking, boardSignal, connected, continuous]);
+
+  useEffect(() => {
+    if (ai.consent !== "granted") {
+      setContinuous(false);
+      setContinuousCount(0);
+      requestTimes.current = [];
+      lastRequestedBoard.current = "";
+    }
+  }, [ai.consent]);
 
   return (
     <section className="rounded-xl border border-border bg-surface p-5">
@@ -136,9 +185,9 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
           </span>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          The local rules coach is free and always available. If you opt in, a manual request sends only this board
-          text and your question to the configured AI provider. No screenshots, credentials, identity, or training
-          history is sent, and Packwatch does not train a shared model from this request.
+          The local rules coach is free and always available. If you opt in, continuous mode sends only meaningful
+          board changes and your question to the configured AI provider. No screenshots, credentials, identity, or
+          training history is sent, and Packwatch does not train a shared model from these requests.
         </p>
         {ai.consent !== "granted" ? (
           <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -164,10 +213,28 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
               <button type="button" disabled={asking} onClick={() => void askExternalCoach()} className="min-h-10 rounded-md bg-accent px-3 text-sm font-medium text-accent-fg disabled:opacity-50">
                 {asking ? "Thinking…" : "Ask optional AI"}
               </button>
-              <button type="button" onClick={() => { ai.update("denied"); setExplanation(""); }} className="min-h-10 rounded-md border border-border px-3 text-sm text-muted">
-                Turn off
-              </button>
-            </div>
+                <button
+                  type="button"
+                  disabled={asking && !continuous}
+                  onClick={() => {
+                    setAiError("");
+                    setContinuous((value) => !value);
+                  }}
+                  className={`min-h-10 rounded-md border px-3 text-sm disabled:opacity-50 ${
+                    continuous ? "border-accent text-accent" : "border-border text-muted"
+                  }`}
+                >
+                  {continuous ? "Continuous AI on" : "Start continuous AI"}
+                </button>
+                <button type="button" onClick={() => { ai.update("denied"); setExplanation(""); }} className="min-h-10 rounded-md border border-border px-3 text-sm text-muted">
+                  Turn off
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-muted">
+                {continuous
+                  ? `Watching for new board states · ${continuousCount}/${AI_CONTINUOUS_LIMIT} analyses in 10 minutes`
+                  : "AI stays idle until you start continuous analysis or ask manually."}
+              </p>
           </>
         )}
         {aiError && <p className="mt-3 rounded-md border border-danger/50 px-3 py-2 text-sm text-danger">{aiError}</p>}
