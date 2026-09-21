@@ -428,6 +428,16 @@ function PackAppInner() {
                       <p className="font-mono text-[10px] tracking-wide text-muted">live advice</p>
                       <p className="mt-2 text-sm"><span className="text-muted">Observed. </span>{bridge.advice.observed}</p>
                       <p className="mt-1 font-display text-xl leading-snug">{bridge.advice.recommendation}</p>
+                      {bridge.advice.boardState && (
+                        <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted">
+                          {bridge.advice.boardState.turn && <span className="rounded-full border border-border px-2 py-1">Turn: {bridge.advice.boardState.turn}</span>}
+                          {bridge.advice.boardState.round != null && <span className="rounded-full border border-border px-2 py-1">Round: {bridge.advice.boardState.round}</span>}
+                          {bridge.advice.boardState.you_hp != null && <span className="rounded-full border border-border px-2 py-1">You {bridge.advice.boardState.you_hp} HP</span>}
+                          {bridge.advice.boardState.opp_hp != null && <span className="rounded-full border border-border px-2 py-1">Opp {bridge.advice.boardState.opp_hp} HP</span>}
+                          {bridge.advice.boardState.mana != null && <span className="rounded-full border border-border px-2 py-1">Mana {bridge.advice.boardState.mana}/{bridge.advice.boardState.mana_cap ?? "?"}</span>}
+                          {bridge.advice.boardState.threats?.map((threat) => <span key={threat} className="rounded-full border border-accent/50 px-2 py-1 text-accent">{threat}</span>)}
+                        </div>
+                      )}
                       {bridge.advice.confidence && (
                         <p className="mt-2 text-sm text-muted">Confidence. {bridge.advice.confidence}</p>
                       )}

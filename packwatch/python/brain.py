@@ -44,6 +44,19 @@ def tick() -> dict:
         advice["you_hp"] = parsed.get("you_hp")
         advice["opp_hp"] = parsed.get("opp_hp")
         advice["mode"] = parsed.get("mode")
+        advice["board_state"] = {
+            key: parsed.get(key)
+            for key in (
+                "turn",
+                "round",
+                "you_hp",
+                "opp_hp",
+                "mana",
+                "mana_cap",
+                "threats",
+                "labels",
+            )
+        }
     advice["observations"] = observations
     advice["updated_at"] = parsed.get("ts")
     advice["fingerprint"] = parsed.get("fingerprint")

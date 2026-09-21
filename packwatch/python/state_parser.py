@@ -29,6 +29,8 @@ def parse_text(text: str) -> dict:
     else:
         turn = "unknown"
     hps = [int(m) for m in re.findall(r"(\d{1,2})\s*/\s*40", board_raw)]
+    mana_match = re.search(r"\b(?:MANA|ENERGY)\s*(\d{1,2})\s*/\s*(\d{1,2})\b", board_raw, re.I)
+    round_match = re.search(r"\bROUND\s*(\d+)\b", upper)
     labels = [
         b
         for b in (
@@ -50,6 +52,20 @@ def parse_text(text: str) -> dict:
         "poison": "POISON" in board_upper,
         "fury": "FURY" in board_upper,
         "frozen": "FROZEN" in board_upper or "FREEZE" in board_upper,
+        "mana": int(mana_match.group(1)) if mana_match else None,
+        "mana_cap": int(mana_match.group(2)) if mana_match else None,
+        "round": int(round_match.group(1)) if round_match else None,
+        "threats": [
+            keyword
+            for keyword, present in (
+                ("Taunt", "TAUNT" in board_upper),
+                ("Rush", "RUSH" in board_upper),
+                ("Poison", "POISON" in board_upper),
+                ("Fury", "FURY" in board_upper),
+                ("Frozen", "FROZEN" in board_upper or "FREEZE" in board_upper),
+            )
+            if present
+        ],
         "labels": labels,
         "raw": raw[:4000],
         "board_raw": board_raw[:2500],

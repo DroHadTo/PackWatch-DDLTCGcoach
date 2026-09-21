@@ -59,6 +59,7 @@ class Handler(BaseHTTPRequestHandler):
                     "mode": live.get("mode") or "",
                     "error": live.get("error") or "",
                     "source": "Local Packwatch watcher",
+                    "updated_at": live.get("ts") or "",
                 }
             )
             return
@@ -80,6 +81,9 @@ class Handler(BaseHTTPRequestHandler):
                     "source": "Local Packwatch watcher",
                     "steps": advice.get("dont") or [],
                     "legal": advice.get("legal") or [],
+                    "board_state": advice.get("board_state") or {},
+                    "updated_at": advice.get("updated_at") or "",
+                    "fingerprint": advice.get("fingerprint") or "",
                 }
             )
             return

@@ -8,6 +8,17 @@ export type LiveAdvice = {
   recommendation: string;
   confidence?: string;
   source: string;
+  boardState?: {
+    turn?: string;
+    round?: number | null;
+    you_hp?: number | null;
+    opp_hp?: number | null;
+    mana?: number | null;
+    mana_cap?: number | null;
+    threats?: string[];
+    labels?: string[];
+  };
+  updatedAt?: string;
 };
 
 export type PackwatchBridgeState = {
@@ -58,6 +69,11 @@ function pickAdvice(payload: unknown): LiveAdvice {
     recommendation: String(recommendation ?? "No recommendation was returned."),
     confidence: record.confidence == null ? undefined : String(record.confidence),
     source: String(record.source ?? "Local watcher"),
+    boardState:
+      record.board_state && typeof record.board_state === "object"
+        ? (record.board_state as LiveAdvice["boardState"])
+        : undefined,
+    updatedAt: record.updated_at == null ? undefined : String(record.updated_at),
   };
 }
 
