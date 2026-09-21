@@ -63,13 +63,18 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
         </p>
         <p className="rounded-lg border border-border bg-elevated px-3 py-2">
           <span className="block font-mono text-[10px] tracking-wide text-muted">Refresh</span>
-          1.5 sec
+          ~1 sec
         </p>
         <p className="rounded-lg border border-border bg-elevated px-3 py-2">
           <span className="block font-mono text-[10px] tracking-wide text-muted">Control</span>
           none
         </p>
       </div>
+      {bridge.latencyMs !== null && (
+        <p className="mt-3 text-xs text-muted">
+          Last response {bridge.latencyMs} ms · advice updates only when the board changes
+        </p>
+      )}
       {bridge.error && (
         <p className="mt-3 rounded-lg border border-danger px-3 py-2 text-sm text-danger">{bridge.error}</p>
       )}

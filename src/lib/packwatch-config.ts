@@ -1,6 +1,7 @@
 export const PACKWATCH_TITLE = "Packwatch | DDL Coach";
 export const DEFAULT_BRIDGE = "http://127.0.0.1:8765";
-export const BRIDGE_POLL_MS = 1500;
+export const BRIDGE_POLL_MS = 1000;
+export const BRIDGE_REQUEST_TIMEOUT_MS = 1200;
 export const GUEST_KEY = "packwatch:guest";
 export const OFFICIAL_SNAPSHOT = "2026-09-18";
 export const OFFICIAL_CARDS_URL = "https://ddltcg.com/data/cards.json";

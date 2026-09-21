@@ -1,4 +1,4 @@
-import { BRIDGE_POLL_MS, DEFAULT_BRIDGE } from "@/lib/packwatch-config";
+import { BRIDGE_POLL_MS, BRIDGE_REQUEST_TIMEOUT_MS, DEFAULT_BRIDGE } from "@/lib/packwatch-config";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 export type BridgeStatus = "idle" | "connecting" | "connected" | "offline" | "error";
@@ -16,6 +16,7 @@ export type PackwatchBridgeState = {
   board: string;
   advice: LiveAdvice | null;
   lastSeen: string | null;
+  latencyMs: number | null;
   error: string | null;
   active: boolean;
   setEndpoint: (endpoint: string) => void;
@@ -46,18 +47,26 @@ function pickAdvice(payload: unknown): LiveAdvice {
   const steps = Array.isArray(record.steps)
     ? record.steps.filter((item): item is string => typeof item === "string").join(" ")
     : "";
+  const recommendation =
+    record.recommendation ??
+    record.action ??
+    record.advice ??
+    (record.next != null ? `Next: ${String(record.next)}${record.why ? ` Why: ${String(record.why)}` : ""}` : null) ??
+    steps;
   return {
     observed: String(record.observed ?? record.summary ?? "Live board received"),
-    recommendation: String(
-      record.recommendation ?? record.action ?? record.advice ?? steps ?? "No recommendation was returned.",
-    ),
+    recommendation: String(recommendation ?? "No recommendation was returned."),
     confidence: record.confidence == null ? undefined : String(record.confidence),
     source: String(record.source ?? "Local watcher"),
   };
 }
 
 async function readJson(url: string, signal: AbortSignal): Promise<unknown> {
-  const response = await fetch(url, { signal, headers: { Accept: "application/json" } });
+  const response = await fetch(url, {
+    signal,
+    cache: "no-store",
+    headers: { Accept: "application/json", "Cache-Control": "no-cache" },
+  });
   if (!response.ok) throw new Error(`Bridge returned ${response.status}`);
   return response.json();
 }
@@ -68,6 +77,7 @@ export function usePackwatchBridge(): PackwatchBridgeState {
   const [board, setBoard] = useState("");
   const [advice, setAdvice] = useState<LiveAdvice | null>(null);
   const [lastSeen, setLastSeen] = useState<string | null>(null);
+  const [latencyMs, setLatencyMs] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [active, setActive] = useState(false);
   const controllerRef = useRef<AbortController | null>(null);
@@ -78,6 +88,7 @@ export function usePackwatchBridge(): PackwatchBridgeState {
     setActive(false);
     setStatus("idle");
     setError(null);
+    setLatencyMs(null);
   }, []);
 
   const connect = useCallback(() => setActive(true), []);
@@ -88,17 +99,38 @@ export function usePackwatchBridge(): PackwatchBridgeState {
     controllerRef.current = controller;
     const base = endpoint.trim().replace(/\/$/, "");
     let firstAttempt = true;
+    let timer: number | null = null;
+    let polling = false;
+    let lastBoardFingerprint = "";
+    let lastAdviceFingerprint = "";
     const poll = async () => {
       if (controller.signal.aborted) return;
-      setStatus(firstAttempt ? "connecting" : "connected");
+      if (polling) return;
+      polling = true;
+      const startedAt = performance.now();
+      const requestController = new AbortController();
+      const abortRequest = () => requestController.abort();
+      controller.signal.addEventListener("abort", abortRequest, { once: true });
+      const timeout = window.setTimeout(() => requestController.abort(), BRIDGE_REQUEST_TIMEOUT_MS);
       try {
         const [livePayload, advicePayload] = await Promise.all([
-          readJson(`${base}/live`, controller.signal),
-          readJson(`${base}/advice`, controller.signal),
+          readJson(`${base}/live`, requestController.signal),
+          readJson(`${base}/advice`, requestController.signal),
         ]);
-        setBoard(pickBoard(livePayload));
-        setAdvice(pickAdvice(advicePayload));
+        const nextBoard = pickBoard(livePayload);
+        const nextAdvice = pickAdvice(advicePayload);
+        const boardFingerprint = nextBoard;
+        const adviceFingerprint = JSON.stringify(nextAdvice);
+        if (boardFingerprint !== lastBoardFingerprint) {
+          lastBoardFingerprint = boardFingerprint;
+          setBoard(nextBoard);
+        }
+        if (adviceFingerprint !== lastAdviceFingerprint) {
+          lastAdviceFingerprint = adviceFingerprint;
+          setAdvice(nextAdvice);
+        }
         setLastSeen(new Date().toISOString());
+        setLatencyMs(Math.round(performance.now() - startedAt));
         setError(null);
         setStatus("connected");
         firstAttempt = false;
@@ -112,13 +144,19 @@ export function usePackwatchBridge(): PackwatchBridgeState {
         );
         setStatus(firstAttempt ? "offline" : "error");
         firstAttempt = false;
+      } finally {
+        window.clearTimeout(timeout);
+        controller.signal.removeEventListener("abort", abortRequest);
+        polling = false;
+        if (!controller.signal.aborted) {
+          timer = window.setTimeout(() => void poll(), BRIDGE_POLL_MS);
+        }
       }
     };
     void poll();
-    const timer = window.setInterval(() => void poll(), BRIDGE_POLL_MS);
     return () => {
       controller.abort();
-      window.clearInterval(timer);
+      if (timer !== null) window.clearTimeout(timer);
       if (controllerRef.current === controller) controllerRef.current = null;
     };
   }, [active, endpoint]);
@@ -129,6 +167,7 @@ export function usePackwatchBridge(): PackwatchBridgeState {
     board,
     advice,
     lastSeen,
+    latencyMs,
     error,
     active,
     setEndpoint,
