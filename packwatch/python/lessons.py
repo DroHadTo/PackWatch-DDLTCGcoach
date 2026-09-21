@@ -45,7 +45,19 @@ def record_observations(current: dict) -> list[dict]:
         if previous.get("fingerprint") != current.get("fingerprint") and not changes:
             add("Board changed", "Read the new board before committing mana or attacks.")
 
-    snapshot = {key: current.get(key) for key in ("turn", "you_hp", "opp_hp", "taunt", "fingerprint")}
+    snapshot = {
+        key: current.get(key)
+        for key in (
+            "turn",
+            "you_hp",
+            "opp_hp",
+            "mana",
+            "mana_cap",
+            "taunt",
+            "threats",
+            "fingerprint",
+        )
+    }
     LAST.write_text(json.dumps(snapshot, indent=2), encoding="utf-8")
     if changes:
         LESSONS.write_text(json.dumps((changes + history)[:80], indent=2), encoding="utf-8")

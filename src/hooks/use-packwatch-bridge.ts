@@ -17,6 +17,9 @@ export type LiveAdvice = {
     mana_cap?: number | null;
     threats?: string[];
     labels?: string[];
+    decision_window?: boolean;
+    face_open?: boolean;
+    mana_spend?: number | null;
   };
   updatedAt?: string;
 };

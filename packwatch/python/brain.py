@@ -40,7 +40,7 @@ def tick() -> dict:
             "taunt": False,
         }
     else:
-        advice = coach(parsed.get("board_raw") or parsed.get("raw") or "", lessons)
+        advice = coach(parsed.get("board_raw") or parsed.get("raw") or "", lessons, parsed)
         advice["you_hp"] = parsed.get("you_hp")
         advice["opp_hp"] = parsed.get("opp_hp")
         advice["mode"] = parsed.get("mode")

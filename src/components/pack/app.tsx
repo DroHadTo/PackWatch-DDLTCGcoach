@@ -435,6 +435,8 @@ function PackAppInner() {
                           {bridge.advice.boardState.you_hp != null && <span className="rounded-full border border-border px-2 py-1">You {bridge.advice.boardState.you_hp} HP</span>}
                           {bridge.advice.boardState.opp_hp != null && <span className="rounded-full border border-border px-2 py-1">Opp {bridge.advice.boardState.opp_hp} HP</span>}
                           {bridge.advice.boardState.mana != null && <span className="rounded-full border border-border px-2 py-1">Mana {bridge.advice.boardState.mana}/{bridge.advice.boardState.mana_cap ?? "?"}</span>}
+                          {bridge.advice.boardState.decision_window != null && <span className="rounded-full border border-border px-2 py-1">{bridge.advice.boardState.decision_window ? "Your decision" : "Opponent turn"}</span>}
+                          {bridge.advice.boardState.face_open != null && <span className="rounded-full border border-border px-2 py-1">{bridge.advice.boardState.face_open ? "Face open" : "Taunt closed"}</span>}
                           {bridge.advice.boardState.threats?.map((threat) => <span key={threat} className="rounded-full border border-accent/50 px-2 py-1 text-accent">{threat}</span>)}
                         </div>
                       )}
