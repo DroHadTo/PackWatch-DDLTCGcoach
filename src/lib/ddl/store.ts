@@ -23,6 +23,7 @@ interface Brain {
   lastScan: string;
   lastDeck: BuiltDeck | null;
   lessons: Lesson[];
+  matchHistory: MatchRecord[];
   tab: "home" | "watch" | "arena" | "brain" | "progress" | "knowledge" | "streamer" | "commentator";
   coachLine: CoachLine;
   ask: string;
@@ -46,8 +47,35 @@ interface Brain {
   buildDeck: (cls: HeroClass) => void;
 }
 
+export interface MatchRecord {
+  id: string;
+  finishedAt: number;
+  result: "win" | "loss" | "draw";
+  turnCount: number;
+  lessons: number;
+  mode: "practice";
+}
+
 function bump(g: GameState, lessons: Lesson[]): CoachLine {
   return coach(g, lessons);
+}
+
+function finishMatch(game: GameState, history: MatchRecord[], lessonCount: number): MatchRecord[] {
+  if (!game.winner || history.some((match) => match.id === `${game.turnNo}:${game.winner}:${game.events.length}`)) {
+    return history;
+  }
+  const result: MatchRecord["result"] = game.winner === "you" ? "win" : game.winner === "bot" ? "loss" : "draw";
+  return [
+    {
+      id: `${game.turnNo}:${game.winner}:${game.events.length}`,
+      finishedAt: Date.now(),
+      result,
+      turnCount: game.turnNo,
+      lessons: lessonCount,
+      mode: "practice" as const,
+    },
+    ...history,
+  ].slice(0, 100);
 }
 
 export const useBrain = create<Brain>()(
@@ -61,6 +89,7 @@ export const useBrain = create<Brain>()(
         lastScan: "Learning from every match, scan, and overlay. Wayne is banned online.",
         lastDeck: null,
         lessons: [],
+        matchHistory: [],
         tab: "watch",
         coachLine: bump(game, []),
         ask: "",
@@ -81,12 +110,14 @@ export const useBrain = create<Brain>()(
             const L = lessonFromIllegal(line);
             if (L) lessons.unshift(L);
           }
+          const matchHistory = finishMatch(g, get().matchHistory, lessons.length);
           set({
             game: { ...g, events: [...g.events], log: [...g.log] },
             coachLine: bump(g, lessons),
             selected: null,
             notice: line,
             lessons: lessons.slice(0, 40),
+            matchHistory,
           });
         },
         hit: (from, to) => {
@@ -99,12 +130,14 @@ export const useBrain = create<Brain>()(
             const L = lessonFromIllegal(line);
             if (L) lessons.unshift(L);
           }
+          const matchHistory = finishMatch(g, get().matchHistory, lessons.length);
           set({
             game: { ...g, events: [...g.events], log: [...g.log] },
             coachLine: bump(g, lessons),
             selected: null,
             notice: line,
             lessons: lessons.slice(0, 40),
+            matchHistory,
           });
         },
         pass: () => {
@@ -116,12 +149,14 @@ export const useBrain = create<Brain>()(
             if (L) lessons.unshift(L);
           }
           endTurn(g);
+          const matchHistory = finishMatch(g, get().matchHistory, lessons.length);
           set({
             game: { ...g, events: [...g.events], log: [...g.log] },
             coachLine: bump(g, lessons),
             selected: null,
             notice: g.log[0] ?? "",
             lessons: lessons.slice(0, 40),
+            matchHistory,
           });
         },
         pick: (sel) => set({ selected: sel }),
@@ -176,7 +211,12 @@ export const useBrain = create<Brain>()(
     {
       name: "pack-watch-brain-v5",
       skipHydration: true,
-      partialize: (s) => ({ controls: s.controls, lastDeck: s.lastDeck, lessons: s.lessons }),
+      partialize: (s) => ({
+        controls: s.controls,
+        lastDeck: s.lastDeck,
+        lessons: s.lessons,
+        matchHistory: s.matchHistory,
+      }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<Brain>;
         return {
@@ -184,6 +224,7 @@ export const useBrain = create<Brain>()(
           controls: Array.isArray(p.controls) && p.controls.length ? p.controls : current.controls,
           lastDeck: p.lastDeck ?? current.lastDeck,
           lessons: Array.isArray(p.lessons) ? p.lessons : current.lessons,
+          matchHistory: Array.isArray(p.matchHistory) ? p.matchHistory : current.matchHistory,
         };
       },
     },

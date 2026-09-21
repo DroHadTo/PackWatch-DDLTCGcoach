@@ -111,6 +111,20 @@ export function PackwatchLiveBridge({ bridge }: { bridge: PackwatchBridgeState }
         The bridge may read board state and advice only. It must not expose credentials or implement clicks, typing,
         or move submission.
       </p>
+      <div className="mt-4 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-bg px-3 py-3">
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-medium text-fg">Browser live link</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted">
+            Optional read-only MV3 companion for the DDLTCG play page. It keeps observations in extension-local storage.
+          </p>
+        </div>
+        <a
+          href="/api/pack-watch-ext.zip"
+          className="inline-flex min-h-10 shrink-0 items-center rounded-md border border-accent px-3 text-sm text-accent"
+        >
+          Download extension
+        </a>
+      </div>
       <section className="mt-5 rounded-xl border border-border bg-bg p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
